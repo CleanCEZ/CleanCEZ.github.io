@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Clean’s projects on GitHub.">
+  <title>Clean</title>
+  <style>
+    :root {
+      --bg: #262624;
+      --surface: rgba(48, 48, 46, 0.72);
+      --surface-hover: rgba(53, 53, 51, 0.85);
+      --border: #3f3f3c;
+      --text: #faf9f5;
+      --muted: #a8a69d;
+      --accent: #d97757;
+      --accent-hover: #e48a6c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background: put a background.jpg next to this file to use an image. */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(250, 249, 245, 0.07), transparent 60%),
+        linear-gradient(rgba(38, 38, 36, 0.55), rgba(38, 38, 36, 0.8)),
+        url("background.jpg") center / cover no-repeat;
+    }
+
+    #leaves { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 3px; }
+
+    /* Sound button */
+    #sound {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    #sound:hover { border-color: var(--accent); }
+    #sound[hidden] { display: none; }
+    #sound svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 72px 24px 24px;
+    }
+
+    .avatar {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 3rem;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      font-size: clamp(2.2rem, 7vw, 3rem);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 20px 0 6px;
+      text-shadow: 0 0 18px rgba(250, 249, 245, 0.35);
+    }
+    .caret { color: var(--accent); animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .tagline { color: var(--muted); margin: 0 0 24px; }
+
+    /* Status card */
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 12px 22px 12px 12px;
+      backdrop-filter: blur(6px);
+      margin-bottom: 24px;
+    }
+    .card .pic { position: relative; width: 56px; height: 56px; flex: none; }
+    .card .pic img, .card .pic .fallback {
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+      background: var(--bg); display: grid; place-items: center;
+      font-family: Georgia, serif; font-size: 1.4rem;
+    }
+    .dot {
+      position: absolute; right: -1px; bottom: -1px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #3ba55d; border: 2px solid var(--bg);
+    }
+    .dot.idle { background: #faa61a; }
+    .dot.dnd { background: #ed4245; }
+    .dot.offline { background: #747f8d; }
+    .card strong { display: block; font-weight: 600; line-height: 1.2; }
+    .card span { color: var(--muted); font-size: 0.9rem; }
+
+    /* Social icons */
+    .socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; padding: 0; margin: 0; list-style: none; }
+    .socials a { display: block; color: var(--text); filter: drop-shadow(0 0 6px rgba(250, 249, 245, 0.45)); transition: color 0.15s, transform 0.15s; }
+    .socials a:hover { color: var(--accent-hover); transform: translateY(-2px); }
+    .socials svg { width: 30px; height: 30px; display: block; }
+    .socials .stroke { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .socials .fill { fill: currentColor; }
+
+    /* Projects */
+    main { max-width: 640px; margin: 0 auto; padding: 0 24px 80px; }
+    h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: 1.5rem; margin: 0 0 16px; }
+    #projects { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; }
+    .project {
+      display: block; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 20px; text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .project:hover { border-color: var(--accent); background: var(--surface-hover); }
+    .project strong { display: block; font-weight: 600; }
+    .project span { display: block; color: var(--muted); font-size: 0.95rem; margin-top: 2px; }
+    .project small { display: block; color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
+    .status { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <canvas id="leaves" aria-hidden="true"></canvas>
+
+  <!-- Put a music.mp3 next to this file to enable the sound button. -->
+  <audio id="music" src="music.mp3" loop preload="metadata"></audio>
+  <button id="sound" type="button" aria-label="Play music" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+      <g id="wave"><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g>
+      <g id="muted"><path d="m16 9 6 6"/><path d="m22 9-6 6"/></g>
+    </svg>
+  </button>
+
+  <section class="hero">
+    <!-- Put an avatar.png next to this file; the letter shows until then. -->
+    <img class="avatar" id="avatar" src="avatar.png" alt="Clean’s profile picture">
+
+    <h1><span id="typed"></span><span class="caret">_</span></h1>
+    <p class="tagline">My projects live on GitHub.</p>
+
+    <div class="card">
+      <div class="pic">
+        <img id="cardPic" src="avatar.png" alt="">
+        <span class="dot" id="dot"></span>
+      </div>
+      <div>
+        <strong>Clean</strong>
+        <span id="activity">currently doing nothing</span>
+      </div>
+    </div>
+
+    <ul class="socials" id="socials"></ul>
+  </section>
+
+  <main>
+    <h2>Projects</h2>
+    <ul id="projects"><li class="status">Loading projects…</li></ul>
+  </main>
+
+  <script>
+    /* ---------- Settings: edit these ---------- */
+    const NAME = "Clean";
+    const GITHUB_USER = "CleanCEZ";
+    const STATUS_TEXT = "currently doing nothing";
+    // Optional live Discord status through Lanyard (join discord.gg/lanyard, then paste your Discord user ID).
+    const DISCORD_ID = "";
+    // Icons: github, mail, globe, link. Add or remove lines as you like.
+    const LINKS = [
+      { name: "GitHub", url: "https://github.com/CleanCEZ", icon: "github" },
+      // { name: "Email", url: "mailto:you@example.com", icon: "mail" },
+      // { name: "Website", url: "https://example.com", icon: "globe" },
+    ];
+
+    /* ---------- Icons ---------- */
+    const ICONS = {
+      github: '<svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>',
+      mail: '<svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>',
+      globe: '<svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>',
+      link: '<svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>'
+    };
+
+    const socials = document.getElementById("socials");
+    for (const l of LINKS) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = l.url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.setAttribute("aria-label", l.name);
+      a.title = l.name;
+      a.innerHTML = ICONS[l.icon] || ICONS.link;
+      li.appendChild(a);
+      socials.appendChild(li);
+    }
+
+    /* ---------- Avatar fallback (letter) ---------- */
+    function letterFallback(img, cls) {
+      img.addEventListener("error", () => {
+        const d = document.createElement("div");
+        d.className = cls;
+        d.textContent = NAME[0];
+        img.replaceWith(d);
+      });
+    }
+    letterFallback(document.getElementById("avatar"), "avatar");
+    letterFallback(document.getElementById("cardPic"), "fallback");
+
+    /* ---------- Typing name ---------- */
+    const typed = document.getElementById("typed");
+    const text = ">" + NAME;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      typed.textContent = text;
+    } else {
+      let i = 0;
+      (function type() {
+        typed.textContent = text.slice(0, ++i);
+        if (i < text.length) setTimeout(type, 140);
+      })();
+    }
+
+    /* ---------- Discord status via Lanyard (optional) ---------- */
+    document.getElementById("activity").textContent = STATUS_TEXT;
+    if (DISCORD_ID) {
+      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
+        .then(r => r.json())
+        .then(({ success, data }) => {
+          if (!success) return;
+          document.getElementById("dot").className = "dot " + data.discord_status;
+          const acts = data.activities || [];
+          const custom = acts.find(a => a.type === 4);
+          const game = acts.find(a => a.type !== 4);
+          const line = game ? game.name : (custom && custom.state) || STATUS_TEXT;
+          document.getElementById("activity").textContent = line;
+        })
+        .catch(() => {});
+    }
+
+    /* ---------- Sound button ---------- */
+    const audio = document.getElementById("music");
+    const btn = document.getElementById("sound");
+    const wave = document.getElementById("wave");
+    const mutedIcon = document.getElementById("muted");
+    function renderSound() {
+      const playing = !audio.paused;
+      wave.style.display = playing ? "" : "none";
+      mutedIcon.style.display = playing ? "none" : "";
+      btn.setAttribute("aria-label", playing ? "Pause music" : "Play music");
+    }
+    audio.addEventListener("loadedmetadata", () => { btn.hidden = false; renderSound(); });
+    btn.addEventListener("click", () => {
+      if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+      renderSound();
+    });
+    audio.addEventListener("play", renderSound);
+    audio.addEventListener("pause", renderSound);
+
+    /* ---------- Falling leaves ---------- */
+    if (!reduce) {
+      const cv = document.getElementById("leaves");
+      const ctx = cv.getContext("2d");
+      let w, h;
+      const leaves = Array.from({ length: 28 }, () => ({
+        x: Math.random(), y: Math.random(),
+        s: 3 + Math.random() * 5,
+        v: 0.25 + Math.random() * 0.5,
+        p: Math.random() * 6.28,
+        r: Math.random() * 6.28
+      }));
+      function resize() { w = cv.width = innerWidth; h = cv.height = innerHeight; }
+      addEventListener("resize", resize);
+      resize();
+      (function frame() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "rgba(250, 249, 245, 0.16)";
+        for (const l of leaves) {
+          l.y += l.v / h * 2;
+          l.p += 0.01;
+          l.r += 0.01;
+          if (l.y > 1.05) { l.y = -0.05; l.x = Math.random(); }
+          const x = l.x * w + Math.sin(l.p) * 30;
+          ctx.save();
+          ctx.translate(x, l.y * h);
+          ctx.rotate(l.r);
+          ctx.beginPath();
+          ctx.ellipse(0, 0, l.s, l.s * 0.5, 0, 0, 6.28);
+          ctx.fill();
+          ctx.restore();
+        }
+        requestAnimationFrame(frame);
+      })();
+    }
+
+    /* ---------- Projects from GitHub ---------- */
+    const list = document.getElementById("projects");
+    function showMessage(t) {
+      list.innerHTML = "";
+      const li = document.createElement("li");
+      li.className = "status";
+      li.textContent = t;
+      list.appendChild(li);
+    }
+    fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=pushed`)
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(repos => {
+        const mine = repos.filter(r => !r.fork && r.name.toLowerCase() !== `${GITHUB_USER.toLowerCase()}.github.io`);
+        if (!mine.length) return showMessage("No public projects yet.");
+        list.innerHTML = "";
+        for (const r of mine) {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.className = "project";
+          a.href = r.html_url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          const n = document.createElement("strong");
+          n.textContent = r.name;
+          const d = document.createElement("span");
+          d.textContent = r.description || "No description yet.";
+          a.append(n, d);
+          if (r.language) {
+            const s = document.createElement("small");
+            s.textContent = r.language;
+            a.appendChild(s);
+          }
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+      })
+      .catch(() => showMessage("Couldn’t load projects right now. See them on GitHub."));
+  </script>
+</body>
+</html>
