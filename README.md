@@ -1,2 +1,2 @@
 IOI REPONSES
-https://CleanCEZ.github.io/ioi-reponse/index.html
+https://CleanCEZ.github.io/
