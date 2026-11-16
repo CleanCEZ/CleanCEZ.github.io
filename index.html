@@ -29,7 +29,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Background: put a background.jpg next to this file to use an image. */
     .bg {
       position: fixed;
       inset: 0;
@@ -44,26 +43,6 @@
 
     a { color: inherit; }
     a:focus-visible, button:focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 3px; }
-
-    /* Sound button */
-    #sound {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    #sound:hover { border-color: var(--accent); }
-    #sound[hidden] { display: none; }
-    #sound svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     .page-layout {
       width: min(1100px, calc(100% - 48px));
@@ -128,7 +107,6 @@
 
     .tagline { color: var(--muted); margin: 0 0 24px; }
 
-    /* Status card */
     .card {
       display: flex;
       align-items: center;
@@ -147,18 +125,9 @@
       background: var(--bg); display: grid; place-items: center;
       font-family: Georgia, serif; font-size: 1.4rem;
     }
-    .dot {
-      position: absolute; right: -1px; bottom: -1px;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: #3ba55d; border: 2px solid var(--bg);
-    }
-    .dot.idle { background: #faa61a; }
-    .dot.dnd { background: #ed4245; }
-    .dot.offline { background: #747f8d; }
     .card strong { display: block; font-weight: 600; line-height: 1.2; }
     .card span { color: var(--muted); font-size: 0.9rem; }
 
-    /* Social icons */
     .socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; padding: 0; margin: 0; list-style: none; }
     .socials a { display: block; color: var(--text); filter: drop-shadow(0 0 6px rgba(250, 249, 245, 0.45)); transition: color 0.15s, transform 0.15s; }
     .socials a:hover { color: var(--accent-hover); transform: translateY(-2px); }
@@ -166,7 +135,6 @@
     .socials .stroke { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .socials .fill { fill: currentColor; }
 
-    /* Projects */
     main { max-width: none; margin: 0; padding: 0; }
     h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: 1.5rem; margin: 0 0 16px; }
     #projects { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; }
@@ -185,16 +153,6 @@
 <body>
   <div class="bg"></div>
   <canvas id="leaves" aria-hidden="true"></canvas>
-
-  <!-- Put a music.mp3 next to this file to enable the sound button. -->
-  <audio id="music" src="music.mp3" loop preload="metadata"></audio>
-  <button id="sound" type="button" aria-label="Play music" hidden>
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M11 5 6 9H2v6h4l5 4V5z"/>
-      <g id="wave"><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g>
-      <g id="muted"><path d="m16 9 6 6"/><path d="m22 9-6 6"/></g>
-    </svg>
-  </button>
 
   <div class="page-layout">
     <main class="projects-panel">
@@ -225,7 +183,6 @@
     </main>
 
     <section class="hero">
-      <!-- Put an avatar.png next to this file; the letter shows until then. -->
       <img class="avatar" id="avatar" src="avatar.png" alt="Skippy’s profile picture">
 
       <h1><span id="typed"></span><span class="caret">_</span></h1>
@@ -234,8 +191,7 @@
       <div class="card">
         <div class="pic">
           <img id="cardPic" src="avatar.png" alt="">
-          <span class="dot" id="dot"></span>
-        </div>
+          </div>
         <div>
           <strong>Skippy</strong>
           <span id="activity">currently doing nothing</span>
@@ -247,24 +203,20 @@
   </div>
 
   <script>
-    /* ---------- Settings: edit these ---------- */
     const NAME = "𝕊𝕜𝕚𝕡𝕡𝕪";
     const GITHUB_USER = "CleanCEZ";
     const STATUS_TEXT = "currently doing nothing";
-    // Optional live Discord status through Lanyard (join discord.gg/lanyard, then paste your Discord user ID).
     const DISCORD_ID = "";
-    // Icons: github, mail, globe, link. Add or remove lines as you like.
     const LINKS = [
       { name: "GitHub", url: "https://github.com/CleanCEZ", icon: "github" },
-      // { name: "Email", url: "mailto:you@example.com", icon: "mail" },
-      // { name: "Website", url: "https://example.com", icon: "globe" },
+      { name: "Discord server", url: "https://discord.gg/kbFYqP8Dr", icon: "discord" },
+      { name: "Steam", url: "https://steamcommunity.com/profiles/76561199561603808/", icon: "steam" },
     ];
 
-    /* ---------- Icons ---------- */
     const ICONS = {
       github: '<svg viewBox="0 0 16 16" class="fill" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>',
-      mail: '<svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>',
-      globe: '<svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>',
+      discord: '<svg viewBox="0 0 24 24" class="fill" aria-hidden="true"><path d="M19.7 5.1A18.3 18.3 0 0 0 15.2 3.7l-.6 1.2a16.8 16.8 0 0 0-5.2 0l-.6-1.2a18.3 18.3 0 0 0-4.5 1.4C1.5 9.3.7 13.4 1.1 17.5a18.5 18.5 0 0 0 5.5 2.8l1.2-2a11.8 11.8 0 0 1-1.9-.9l.5-.4a13.2 13.2 0 0 0 11.2 0l.5.4a11.8 11.8 0 0 1-1.9.9l1.2 2a18.5 18.5 0 0 0 5.5-2.8c.5-4.8-.8-8.9-3.2-12.4ZM8.7 14.8c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Zm6.6 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Z"/></svg>',
+      steam: '<svg viewBox="0 0 24 24" class="fill" aria-hidden="true"><path d="M12 2a10 10 0 0 0-9.9 11.4l5.4 2.2a3.2 3.2 0 0 0 5.9-1.7l3.1-2.3a4.2 4.2 0 1 0-1.2-1.7l-3.3 2.4a3.2 3.2 0 0 0-3.8 1.1l-3.1-1.3A8 8 0 1 1 12 20a8 8 0 0 1-6.8-3.8l-1.7-.7A10 10 0 1 0 12 2Zm5.7 4.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM10.2 13.7a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2Z"/></svg>',
       link: '<svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>'
     };
 
@@ -282,7 +234,6 @@
       socials.appendChild(li);
     }
 
-    /* ---------- Avatar fallback (letter) ---------- */
     function letterFallback(img, cls) {
       img.addEventListener("error", () => {
         const d = document.createElement("div");
@@ -294,7 +245,6 @@
     letterFallback(document.getElementById("avatar"), "avatar");
     letterFallback(document.getElementById("cardPic"), "fallback");
 
-    /* ---------- Typing name ---------- */
     const typed = document.getElementById("typed");
     const text = NAME;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -308,43 +258,6 @@
       })();
     }
 
-    /* ---------- Discord status via Lanyard (optional) ---------- */
-    document.getElementById("activity").textContent = STATUS_TEXT;
-    if (DISCORD_ID) {
-      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
-        .then(r => r.json())
-        .then(({ success, data }) => {
-          if (!success) return;
-          document.getElementById("dot").className = "dot " + data.discord_status;
-          const acts = data.activities || [];
-          const custom = acts.find(a => a.type === 4);
-          const game = acts.find(a => a.type !== 4);
-          const line = game ? game.name : (custom && custom.state) || STATUS_TEXT;
-          document.getElementById("activity").textContent = line;
-        })
-        .catch(() => {});
-    }
-
-    /* ---------- Sound button ---------- */
-    const audio = document.getElementById("music");
-    const btn = document.getElementById("sound");
-    const wave = document.getElementById("wave");
-    const mutedIcon = document.getElementById("muted");
-    function renderSound() {
-      const playing = !audio.paused;
-      wave.style.display = playing ? "" : "none";
-      mutedIcon.style.display = playing ? "none" : "";
-      btn.setAttribute("aria-label", playing ? "Pause music" : "Play music");
-    }
-    audio.addEventListener("loadedmetadata", () => { btn.hidden = false; renderSound(); });
-    btn.addEventListener("click", () => {
-      if (audio.paused) audio.play().catch(() => {}); else audio.pause();
-      renderSound();
-    });
-    audio.addEventListener("play", renderSound);
-    audio.addEventListener("pause", renderSound);
-
-    /* ---------- Falling leaves ---------- */
     if (!reduce) {
       const cv = document.getElementById("leaves");
       const ctx = cv.getContext("2d");
@@ -379,8 +292,6 @@
         requestAnimationFrame(frame);
       })();
     }
-
-    /* Projects are listed directly in the HTML above. */
 
   </script>
 </body>
