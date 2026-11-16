@@ -1,2 +1,2 @@
 Its my website yayyy
-https://CleanCEZ.github.io/index.html
+https://CleanCEZ.github.io/
