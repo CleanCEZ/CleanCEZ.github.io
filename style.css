@@ -73,16 +73,14 @@ a:focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 3px; }
   backdrop-filter: blur(8px);
 }
 
-.avatar {
+.avatar,
+.card img {
   width: 128px;
   height: 128px;
-  display: block;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center 18%;
   background: #1c1b1a;
   border: 2px solid rgba(250, 249, 245, 0.18);
-  box-shadow: 0 0 0 4px rgba(250, 249, 245, 0.03);
 }
 
 h1 {
